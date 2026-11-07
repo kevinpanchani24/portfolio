@@ -41,7 +41,7 @@ export const projects = [
     slug: 'bug-reporting-platform',
     title: 'Centralized Bug Reporting Platform',
     status: 'group',
-    team: 'Group project with Krish Gadhiya, Middlesex University',
+    // team: 'Group project with Krish Gadhiya, Middlesex University',
     summary:
       'A MERN platform where people report bugs they find in companies’ software, companies verify them and award reward points, and an admin moderates the whole platform.',
     problem:

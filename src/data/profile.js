@@ -11,7 +11,7 @@ export const profile = {
   github: 'https://github.com/kevinpanchani24',
   linkedin: 'https://www.linkedin.com/in/kevin-panchani/',
   cv: '/Kevin-CV.pdf', // put your PDF in public/ with this name
-  photo: '/Profile.jpeg', // put your photo in public/ — your initials show until you do
+  photo: '/profile.jpg', // put your photo in public/ — your initials show until you do
 
   intro:
     'I build full-stack web apps with MongoDB, Express, React and Node.js. I recently completed an MSc in Computer Science at Middlesex University, London.',
