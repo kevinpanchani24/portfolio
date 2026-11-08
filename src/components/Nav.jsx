@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { profile } from '../data/profile.js';
 import { openPalette, isMac } from './CommandPalette.jsx';
+import { useScrollProgress } from '../hooks/useScrollProgress.js';
+import { useEscape } from '../hooks/useEscape.js';
 
-const links = [
+const LINKS = [
   ['About', '#about'],
   ['Projects', '#projects'],
   ['Education', '#education'],
@@ -10,41 +12,43 @@ const links = [
   ['Contact', '#contact'],
 ];
 
+function NavLinks({ open, onNavigate }) {
+  return (
+    <ul id="nav-menu" className={`nav-links ${open ? 'is-open' : ''}`}>
+      {LINKS.map(([label, href]) => <li key={href}><a href={href} onClick={onNavigate}>{label}</a></li>)}
+    </ul>
+  );
+}
+
+function NavMenu({ open, onNavigate }) {
+  return <nav aria-label="Main"><NavLinks open={open} onNavigate={onNavigate} /></nav>;
+}
+
+function Brand() {
+  return <a href="#top" className="nav-name"><span className="nav-mark" aria-hidden="true">{'</>'}</span>{profile.name}</a>;
+}
+
+function KeyHint() {
+  return (
+    <button className="kbd-btn" onClick={openPalette} aria-label="Open command menu">
+      <kbd>{isMac ? '⌘' : 'Ctrl'}</kbd><kbd>K</kbd>
+    </button>
+  );
+}
+
 // Floating glass ornament at the top of the space
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let frame = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        setProgress(max > 0 ? window.scrollY / max : 0);
-      });
-    };
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('keydown', onKey);
-    return () => { cancelAnimationFrame(frame); window.removeEventListener('scroll', onScroll); window.removeEventListener('keydown', onKey); };
-  }, []);
+  const close = useCallback(() => setOpen(false), []);
+  const progress = useScrollProgress();
+  useEscape(close);
 
   return (
     <header className="nav-shell">
       <div className="nav glass">
-        <a href="#top" className="nav-name"><span className="nav-mark" aria-hidden="true">{'</>'}</span>{profile.name}</a>
-        <nav aria-label="Main">
-          <ul id="nav-menu" className={`nav-links ${open ? 'is-open' : ''}`}>
-            {links.map(([label, href]) => (
-              <li key={href}><a href={href} onClick={() => setOpen(false)}>{label}</a></li>
-            ))}
-          </ul>
-        </nav>
-        <button className="kbd-btn" onClick={openPalette} aria-label="Open command menu">
-          <kbd>{isMac ? '⌘' : 'Ctrl'}</kbd><kbd>K</kbd>
-        </button>
+        <Brand />
+        <NavMenu open={open} onNavigate={close} />
+        <KeyHint />
         <button className="nav-toggle" aria-expanded={open} aria-controls="nav-menu" onClick={() => setOpen((o) => !o)}>
           {open ? 'Close' : 'Menu'}
         </button>
