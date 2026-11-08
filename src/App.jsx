@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import Scene from './components/Scene.jsx';
 import Nav from './components/Nav.jsx';
 import Hero from './components/Hero.jsx';
@@ -25,6 +26,7 @@ export default function App() {
       </main>
       <Footer />
       <CommandPalette />
+      <Analytics />
     </>
   );
 }
